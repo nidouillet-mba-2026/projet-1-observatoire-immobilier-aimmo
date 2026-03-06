@@ -11,14 +11,22 @@ import math
 
 def mean(xs: list[float]) -> float:
     """Retourne la moyenne d'une liste de nombres."""
-    # VOTRE CODE ICI
-    raise NotImplementedError("Implementez mean() - voir Grus ch.5")
+    return sum(xs) / len(xs)
 
+
+def _median_odd(xs: list[float]) -> float:
+    """len(xs) est impair, la médiane est l'élément du milieu de la liste triée."""
+    return sorted(xs)[len(xs) // 2]
+
+def _median_even(xs: list[float]) -> float:
+    """len(xs) est pair, la médiane est la moyenne des deux éléments du milieu de la liste triée."""
+    sorted_xs = sorted(xs)
+    mid = len(xs) // 2
+    return (sorted_xs[mid - 1] + sorted_xs[mid]) / 2
 
 def median(xs: list[float]) -> float:
     """Retourne la mediane d'une liste de nombres."""
-    # VOTRE CODE ICI
-    raise NotImplementedError("Implementez median() - voir Grus ch.5")
+    return _median_even(xs) if len(xs) % 2 == 0 else _median_odd(xs)
 
 
 def variance(xs: list[float]) -> float:
