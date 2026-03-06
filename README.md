@@ -85,3 +85,5 @@ URL de l'application déployée : [À compléter]
 L'évaluation automatique du projet s'effectue via l'Intégration Continue (CI) configurée sur les GitHub Actions. À chaque soumission de code (`git push`), une suite de tests permet d'évaluer automatiquement le travail effectué.
 - Le score CI est calculé sur 55 points (les 45 points restants sont évalués en soutenance).
 - Les résultats des analyses sont disponibles dans l'onglet Actions du dépôt GitHub (dernier workflow > Job Summary).
+
+
