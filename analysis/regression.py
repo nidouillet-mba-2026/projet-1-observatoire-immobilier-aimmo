@@ -29,8 +29,10 @@ def least_squares_fit(x: list[float], y: list[float]) -> tuple[float, float]:
     Trouve alpha et beta qui minimisent la somme des erreurs au carre.
     Retourne (alpha, beta) tels que y ≈ alpha + beta * x.
     """
+
     # Calcule de beta (pente)
     beta = covariance(x, y) / variance(x)
+
     # Calcule d'alpha (ordonnée à l'origine)
     alpha = mean(y) - beta * mean(x)
 
@@ -42,5 +44,15 @@ def r_squared(alpha: float, beta: float, x: list, y: list) -> float:
     R² = 1 - (SS_res / SS_tot)
     1.0 = ajustement parfait, 0.0 = le modele n'explique rien.
     """
-    # VOTRE CODE ICI
-    raise NotImplementedError("Implementez r_squared() - voir Grus ch.14")
+
+    # Erreur du modèle
+    ss_res = sum_of_sqerrors(alpha, beta, x, y)
+
+    # Erreur de la moyenne
+    mean_y = mean(y)
+    ss_tot = sum((y_i - mean_y) ** 2 for y_i in y)
+    
+    # R²
+    r2 = 1.0 - (ss_res / ss_tot)
+    
+    return r2
