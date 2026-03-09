@@ -1,0 +1,73 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies for PDF generation
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY . .
+
+# Create API directory if it doesn't exist
+RUN mkdir -p api
+
+# Create a simple API if api/main.py doesn't exist
+RUN if [ ! -f api/main.py ]; then \
+    echo "from fastapi import FastAPI\n\
+from fastapi.middleware.cors import CORSMiddleware\n\
+import httpx\n\
+import os\n\
+\n\
+app = FastAPI(title='AImmo API')\n\
+\n\
+# CORS configuration\n\
+app.add_middleware(\n\
+    CORSMiddleware,\n\
+    allow_origins=['*'],\n\
+    allow_credentials=True,\n\
+    allow_methods=['*'],\n\
+    allow_headers=['*'],\n\
+)\n\
+\n\
+ollama_host = os.getenv('OLLAMA_HOST', 'http://ollama:11434')\n\
+ollama_model = os.getenv('OLLAMA_MODEL', 'llama3')\n\
+\n\
+@app.get('/health')\n\
+async def health_check():\n\
+    return {'status': 'ok'}\n\
+\n\
+@app.post('/chat')\n\
+async def chat(message: dict):\n\
+    \"\"\"Chat endpoint connected to Ollama\"\"\"\n\
+    try:\n\
+        async with httpx.AsyncClient() as client:\n\
+            response = await client.post(\n\
+                f'{ollama_host}/api/generate',\n\
+                json={\n\
+                    'model': ollama_model,\n\
+                    'prompt': message.get('text', ''),\n\
+                    'stream': False\n\
+                },\n\
+                timeout=30.0\n\
+            )\n\
+        return response.json()\n\
+    except Exception as e:\n\
+        return {'error': str(e)}\n\
+\n\
+@app.get('/')\n\
+async def root():\n\
+    return {'message': 'AImmo API - Real Estate Analysis Engine'}\n" > api/main.py; \
+fi
+
+# Expose port
+EXPOSE 8000
+
+# Run the API
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
