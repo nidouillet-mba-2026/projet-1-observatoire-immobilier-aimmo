@@ -2,7 +2,7 @@
 Regression lineaire simple from scratch.
 Reference : Joel Grus, "Data Science From Scratch", chapitre 14.
 
-IMPORTANT : N'importez pas  pour ces fonctions.
+IMPORTANT : N'importez pas pour ces fonctions.
 """
 
 from analysis.stats import mean, variance, covariance, correlation
@@ -29,8 +29,12 @@ def least_squares_fit(x: list[float], y: list[float]) -> tuple[float, float]:
     Trouve alpha et beta qui minimisent la somme des erreurs au carre.
     Retourne (alpha, beta) tels que y ≈ alpha + beta * x.
     """
+    # Calcule de beta (pente)
+    beta = covariance(x, y) / variance(x)
+    # Calcule d'alpha (ordonnée à l'origine)
+    alpha = mean(y) - beta * mean(x)
 
-
+    return alpha, beta
 
 def r_squared(alpha: float, beta: float, x: list, y: list) -> float:
     """
