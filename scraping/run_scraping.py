@@ -2,14 +2,11 @@
 Script principal de scraping immobilier via FlareSolverr.
 
 Scrape PAP.fr, SeLoger.com et LeBoncoin.fr pour les biens à Toulon (≤ 500 000 €).
-Les résultats sont sauvegardés dans donnees/ sous forme de CSV avec des noms fixes
+Le résultat est sauvegardé dans un unique fichier CSV avec un nom fixe
 (pas de timestamp) pour que le frontend puisse toujours lire le même fichier.
 
-Fichiers générés (écrasés à chaque run) :
-  donnees/scraping_pap.csv
-  donnees/scraping_seloger.csv
-  donnees/scraping_leboncoin.csv
-  donnees/scraping_all.csv       ← fichier combiné lu par le front
+Fichier généré (écrasé à chaque run) :
+  donnees/annonces.csv       ← tous sites combinés, lu par le front
 
 Usage :
   # Scraper tous les sites (toutes les pages disponibles)
@@ -122,11 +119,7 @@ def main() -> None:
                 # ── Nettoyage par site ─────────────────────────────────────
                 df = _clean(df, logger, site)
                 all_dfs.append(df)
-
-                # CSV individuel par site — nom fixe (écrasé à chaque run)
-                csv_path = output_dir / f"scraping_{site}.csv"
-                df.to_csv(str(csv_path), index=False, encoding="utf-8-sig")
-                logger.info(f"[{site.upper()}] Sauvegardé : {csv_path} ({len(df)} lignes propres)")
+                logger.info(f"[{site.upper()}] {len(df)} annonces propres récupérées")
 
     except ConnectionError as exc:
         logger.error(f"\n❌  {exc}")
@@ -142,7 +135,7 @@ def main() -> None:
         df_all = pd.concat(all_dfs, ignore_index=True)
         df_all = _clean(df_all, logger, "all")  # dédup cross-sites
 
-        combined_path = output_dir / "scraping_all.csv"       # nom FIXE
+        combined_path = output_dir / "annonces.csv"       # nom FIXE — lu par le front
         df_all.to_csv(combined_path, index=False, encoding="utf-8-sig")
 
         logger.info(f"\n{'=' * 60}")

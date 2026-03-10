@@ -64,15 +64,12 @@ python -m scraping.run_scraping --output data/scraping
 
 ## Fichiers générés
 
-Les CSV sont **écrasés à chaque run** avec un nom fixe (pas de timestamp)
+Le CSV est **écrasé à chaque run** avec un nom fixe (pas de timestamp)
 pour que le frontend puisse toujours lire le même fichier.
 
 ```
 donnees/
-├── scraping_pap.csv          # Annonces PAP uniquement
-├── scraping_seloger.csv      # Annonces SeLoger uniquement
-├── scraping_leboncoin.csv    # Annonces LeBoncoin uniquement
-└── scraping_all.csv          # ← LU PAR LE FRONT (tous sites combinés)
+└── annonces.csv     # ← LU PAR LE FRONT (tous sites combinés : PAP + SeLoger + LeBoncoin)
 ```
 
 ### Colonnes du CSV
