@@ -225,24 +225,24 @@ print("=" * 70)
 # EXPORT POUR LE FRONTEND
 # ═══════════════════════════════════════════════════════════════
 
-import json
+# import json
 
-modeles = {
-    'appartements': {
-        'alpha': resultats_apparts['alpha'] if resultats_apparts else None,
-        'beta': resultats_apparts['beta'] if resultats_apparts else None,
-        'r2': resultats_apparts['r2'] if resultats_apparts else None,
-    } if resultats_apparts else None,
-    'maisons': {
-        'alpha': resultats_maisons['alpha'] if resultats_maisons else None,
-        'beta': resultats_maisons['beta'] if resultats_maisons else None,
-        'r2': resultats_maisons['r2'] if resultats_maisons else None,
-    } if resultats_maisons else None,
-    'opportunites': toutes_opportunites[:20]  # Top 20 pour le frontend
-}
+# modeles = {
+#     'appartements': {
+#         'alpha': resultats_apparts['alpha'] if resultats_apparts else None,
+#         'beta': resultats_apparts['beta'] if resultats_apparts else None,
+#         'r2': resultats_apparts['r2'] if resultats_apparts else None,
+#     } if resultats_apparts else None,
+#     'maisons': {
+#         'alpha': resultats_maisons['alpha'] if resultats_maisons else None,
+#         'beta': resultats_maisons['beta'] if resultats_maisons else None,
+#         'r2': resultats_maisons['r2'] if resultats_maisons else None,
+#     } if resultats_maisons else None,
+#     'opportunites': toutes_opportunites[:20]  # Top 20 pour le frontend
+# }
 
-# Sauvegarder en JSON
-with open('donnees/modeles_regression.json', 'w', encoding='utf-8') as f:
-    json.dump(modeles, f, indent=2, ensure_ascii=False)
+# # Sauvegarder en JSON
+# with open('donnees/modeles_regression.json', 'w', encoding='utf-8') as f:
+#     json.dump(modeles, f, indent=2, ensure_ascii=False)
 
-print("\n💾 Modèles sauvegardés dans donnees/modeles_regression.json")
+# print("\n💾 Modèles sauvegardés dans donnees/modeles_regression.json")
