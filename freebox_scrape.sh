@@ -67,8 +67,9 @@ if ! git diff --quiet data/annonces.csv; then
     log "CSV modifié — commit + push..."
     git add data/annonces.csv
     git commit -m "chore(data): $N annonces mises à jour [skip ci]"
-    git push origin "$BRANCH"
-    log "Pushé sur GitHub ✓ — Streamlit se mettra à jour dans ~5min"
+    git push origin "$BRANCH" && log "Pushé sur classroom (origin) ✓"
+    git push fork "$BRANCH" && log "Pushé sur fork perso (Karmadibsa) ✓"
+    log "Streamlit se mettra à jour dans ~5min"
 else
     log "Pas de changement, rien à pusher"
 fi
