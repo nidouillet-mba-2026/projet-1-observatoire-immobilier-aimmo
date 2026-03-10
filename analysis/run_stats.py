@@ -1,10 +1,14 @@
 import pandas as pd
-from analysis.stats import mean, correlation, median
-from analysis.regression import least_squares_fit
+
+# from analysis.stats import mean, correlation, median
+from stats import mean, correlation, median
+# from analysis.regression import least_squares_fit
+from regression import least_squares_fit
+
 import math
 
 # 1. Charger les données (Pandas est autorisé pour la lecture, pas pour les calculs)
-df = pd.read_csv("donnees/dvf-nettoyer_800_day.csv")
+df = pd.read_csv("../donnees/dvf-nettoyer_800_day.csv")
 
 # On repasse en listes Python pour les calculs statistiques
 prix_bruts = df['valeur_fonciere'].tolist()
