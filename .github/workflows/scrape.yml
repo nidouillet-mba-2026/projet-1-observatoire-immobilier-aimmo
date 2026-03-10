@@ -2,9 +2,7 @@ name: "🔄 Scraping immobilier — Toulon"
 
 # ─── Déclencheurs ──────────────────────────────────────────────────────────────
 on:
-  schedule:
-    - cron: "0 * * * *"   # toutes les heures (minute 0 de chaque heure)
-  workflow_dispatch:        # déclenchement manuel depuis l'onglet Actions
+  workflow_dispatch:        # déclenchement manuel uniquement (scraping automatique via Freebox Ultra)
 
 # ─── Permissions ───────────────────────────────────────────────────────────────
 permissions:
