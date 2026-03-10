@@ -24,6 +24,7 @@ Usage :
 
 import argparse
 import logging
+import re
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -133,9 +134,10 @@ def main() -> None:
     # ─── Fichier combiné — nom fixe lu par le front ───────────────────────────
     if all_dfs:
         df_all = pd.concat(all_dfs, ignore_index=True)
-        df_all = _clean(df_all, logger, "all")  # dédup cross-sites
+        df_all = _clean(df_all, logger, "all")        # dédup cross-sites
+        df_all = _align_dvf_columns(df_all)           # aligne sur le schéma DVF
 
-        combined_path = output_dir / "annonces.csv"       # nom FIXE — lu par le front
+        combined_path = output_dir / "annonces.csv"   # nom FIXE — lu par le front
         df_all.to_csv(combined_path, index=False, encoding="utf-8-sig")
 
         logger.info(f"\n{'=' * 60}")
@@ -145,12 +147,89 @@ def main() -> None:
         logger.info(f"  Total annonces nettes : {len(df_all)}")
         for source in df_all["source"].unique():
             n = len(df_all[df_all["source"] == source])
-            prix_med = df_all.loc[df_all["source"] == source, "prix"].median()
+            prix_med = df_all.loc[df_all["source"] == source, "valeur_fonciere"].median()
             logger.info(f"    • {source:<12} : {n:>4} annonces  |  prix médian: {prix_med:,.0f} €")
         logger.info(f"\n  Fichier combiné (front) : {combined_path}")
         logger.info(f"{'=' * 60}\n")
     else:
         logger.warning("Aucune annonce récupérée. Vérifiez FlareSolverr et les URLs.")
+
+
+# ─── Alignement colonnes DVF ──────────────────────────────────────────────────
+
+def _split_localisation(loc: str) -> tuple[str | None, str | None]:
+    """Extrait (nom_commune, code_postal) depuis 'Toulon (83000)' ou 'Toulon 83000'."""
+    if not isinstance(loc, str) or not loc.strip():
+        return None, None
+    m = re.search(r"^(.+?)\s*\(?\s*(\d{5})\s*\)?$", loc.strip())
+    if m:
+        return m.group(1).strip(), m.group(2)
+    return loc.strip(), None
+
+
+def _align_dvf_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Renomme et restructure les colonnes de annonces.csv pour les aligner
+    sur le schéma de dvf_toulon.csv afin de faciliter les analyses croisées.
+
+    Mapping :
+      prix        → valeur_fonciere
+      surface     → surface_reelle_bati
+      nb_pieces   → nombre_pieces_principales
+      type_bien   → type_local
+      date_scraped→ date_mutation
+      localisation→ nom_commune + code_postal + code_departement
+
+    Colonnes DVF sans équivalent scraping ajoutées vides :
+      longitude, latitude
+    """
+    df = df.copy()
+
+    # ── Renommages directs ────────────────────────────────────────────────────
+    df = df.rename(columns={
+        "prix":       "valeur_fonciere",
+        "surface":    "surface_reelle_bati",
+        "nb_pieces":  "nombre_pieces_principales",
+        "type_bien":  "type_local",
+        "date_scraped": "date_mutation",
+    })
+
+    # ── Décomposition de localisation ─────────────────────────────────────────
+    if "localisation" in df.columns:
+        parsed = df["localisation"].map(_split_localisation)
+        df["nom_commune"] = parsed.map(lambda x: x[0])
+        df["code_postal"]  = parsed.map(lambda x: x[1])
+        df["code_departement"] = df["code_postal"].map(
+            lambda cp: cp[:2] if isinstance(cp, str) and len(cp) >= 2 else None
+        )
+        df = df.drop(columns=["localisation"])
+
+    # ── Colonnes DVF sans équivalent (laissées vides) ─────────────────────────
+    df["longitude"] = None
+    df["latitude"]  = None
+
+    # ── Ordre final des colonnes ──────────────────────────────────────────────
+    ordre = [
+        "source",
+        "type_local",
+        "titre",
+        "valeur_fonciere",
+        "surface_reelle_bati",
+        "nombre_pieces_principales",
+        "nom_commune",
+        "code_postal",
+        "code_departement",
+        "longitude",
+        "latitude",
+        "description",
+        "url",
+        "date_mutation",
+    ]
+    # Garde uniquement les colonnes présentes (sécurité)
+    ordre = [c for c in ordre if c in df.columns]
+    df = df[ordre]
+
+    return df
 
 
 # ─── Nettoyage post-scraping ──────────────────────────────────────────────────
