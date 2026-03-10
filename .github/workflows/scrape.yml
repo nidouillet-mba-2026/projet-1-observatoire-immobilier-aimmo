@@ -46,6 +46,8 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install pandas requests beautifulsoup4 lxml
+        # Note : pandas est requis par run_scraping.py (concat + to_csv)
+        # Le comptage de lignes dans le commit se fait en bash (wc -l), sans pandas
 
       # ── 4. Attendre que FlareSolverr soit prêt ──────────────────────────────
       - name: "⏳ Attendre FlareSolverr (max 60s)"
@@ -79,12 +81,8 @@ jobs:
           if git diff --staged --quiet; then
             echo "ℹ️  Aucune modification dans annonces.csv — pas de commit."
           else
-            # Compte le nombre d'annonces pour le message de commit
-            N=$(python -c "
-          import pandas as pd
-          df = pd.read_csv('data/annonces.csv', encoding='utf-8-sig')
-          print(len(df))
-          ")
+            # Compte le nombre d'annonces (lignes - 1 pour l'en-tête)
+            N=$(( $(wc -l < data/annonces.csv) - 1 ))
             git commit -m "chore(data): ${N} annonces mises à jour [skip ci]"
             git push
             echo "✅ annonces.csv commité ($N annonces)."
