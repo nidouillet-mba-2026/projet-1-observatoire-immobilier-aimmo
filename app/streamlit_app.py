@@ -207,6 +207,37 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; color: #1E293B; }
 .pm2-badge  { background: #EFF6FF; border: 1px solid #BFDBFE; color: #1D4ED8 !important; font-size: 12px; padding: 2px 8px; border-radius: 6px; }
 
 hr { border: none; border-top: 1px solid #E2E8F0; margin: 16px 0; }
+
+/* ── Titres globaux zone principale (anti blanc-sur-blanc) ── */
+h1, h2, h3, h4, h5, h6,
+[data-testid="stHeadingWithActionElements"] { color: #1E293B !important; }
+
+/* ── Onglet actif — texte blanc (fond bleu foncé #1B2B4B) ── */
+[aria-selected="true"][data-baseweb="tab"] span,
+[aria-selected="true"][data-baseweb="tab"] p { color: white !important; }
+
+/* ── Boutons Streamlit — blanc sur fond sombre ── */
+/* (notre règle .main p { color:#1E293B } rendait le texte illisible sur fond bleu) */
+[data-testid="stButton"] > button {
+    background: #1B2B4B !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    padding: 8px 16px !important;
+    transition: background 0.15s !important;
+}
+[data-testid="stButton"] > button:hover { background: #2C4A8A !important; }
+[data-testid="stButton"] > button p,
+[data-testid="stButton"] > button span { color: white !important; }
+
+/* ── Réduire les barres blanches d'espacement (<br> seuls) ── */
+[data-testid="stMarkdownContainer"]:has(> br:only-child) {
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+    line-height: 0 !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -811,19 +842,6 @@ with tab_opps:
             <span style="color:#64748B;font-size:12px;">
             Coefficients fixes — robustes statistiquement, mais ne capturent pas les
             variations de prix récentes (données ≤ 3 mois).
-            </span>
-            </div>
-            """, unsafe_allow_html=True)
-        else:
-            st.markdown("""
-            <div class="section-card" style="border-top-color:#27AE60;">
-            <strong>🔬 Régression dynamique</strong> — Pour chaque type de bien (Appartement / Maison),
-            on calcule une droite de régression linéaire <em>Prix = a × Surface + b</em> à partir
-            de toutes les annonces filtrées. L'<strong>écart</strong> = Prix réel − Prix prédit :
-            un écart <span style="color:#16A34A;font-weight:600">négatif</span> signifie que le bien est
-            <strong>moins cher que ce que le marché laisserait attendre</strong> pour sa surface.<br>
-            <span style="color:#64748B;font-size:12px;">
-            Sensible aux filtres — recalculée à chaque sélection. Moins robuste si peu d'annonces.
             </span>
             </div>
             """, unsafe_allow_html=True)
