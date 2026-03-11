@@ -8,7 +8,8 @@ import streamlit as st
 
 from analysis.regression import compute_dvf_scores, compute_regression
 from assets.style import inject_css
-from data_loader import load_data
+from config import DVF_CSV_PATH
+from data_loader import get_dvf_models, load_data
 from ui.tab_analysis import render_analysis
 from ui.tab_assistant import render_assistant
 from ui.tab_list import render_list
@@ -24,7 +25,8 @@ st.set_page_config(
 inject_css()
 
 # ── Données ────────────────────────────────────────────────────────────────────
-df_raw = load_data()
+df_raw     = load_data()
+dvf_models = get_dvf_models(str(DVF_CSV_PATH))
 
 # ── Session state — Assistant ──────────────────────────────────────────────────
 for _k, _v in [("asst_step", 0), ("asst_type", None),
@@ -117,7 +119,7 @@ if (not df_scored.empty and "ecart_pct" in df_scored.columns
     df = df.merge(_reg_cols, on="url", how="left", suffixes=("", "_reg"))
 
 df_dvf = (
-    compute_dvf_scores(df[df["type_local"].notna()].copy())
+    compute_dvf_scores(df[df["type_local"].notna()].copy(), models=dvf_models)
     if not df.empty else pd.DataFrame()
 )
 

@@ -10,7 +10,15 @@ GITHUB_RAW_URL = (
     "https://raw.githubusercontent.com/Karmadibsa/AImmo/"
     "feat/axel-verification/data/annonces.csv"
 )
-CSV_PATH = Path(__file__).parent.parent / "data" / "annonces.csv"
+CSV_PATH     = Path(__file__).parent.parent / "data" / "annonces.csv"
+DVF_CSV_PATH = Path(__file__).parent.parent / "data" / "dvf_toulon.csv"
+
+# ── Filtres prix/m² pour la régression DVF (supprime les outliers) ──────────────
+# Appartements : 3 500 – 10 000 €/m²   Maisons : 2 000 – 6 000 €/m²
+DVF_PM2_FILTERS: dict[str, tuple[int, int]] = {
+    "Appartement": (3_500, 10_000),
+    "Maison":      (2_000,  6_000),
+}
 
 # ── Tags NLP (extraction depuis description) ────────────────────────────────────
 NLP_TAGS: dict[str, tuple[list[str], str]] = {
@@ -27,11 +35,10 @@ NLP_TAGS: dict[str, tuple[list[str], str]] = {
                     "proche mer", "400 mètres"],                        "tag-sea"),
 }
 
-# ── Coefficients DVF pré-calculés ───────────────────────────────────────────────
-# Source : data/dvf_toulon.csv — ventes 2023-2025 (nature_mutation = Vente)
-# Filtre : surface > 10 m², prix 10 000–500 000 €, Toulon uniquement
-# Appartement : n=3 725, R²=0.141  |  Maison : n=393, R²=0.139
+# ── Coefficients DVF — valeurs de repli (fallback) ──────────────────────────────
+# Utilisés uniquement si dvf_toulon.csv est absent ou illisible.
+# Pour les valeurs dynamiques (R²≈0.67), voir data_loader.get_dvf_models().
 DVF_REGRESSION: dict[str, dict] = {
-    "Appartement": {"slope": 1_661.0, "intercept":  76_761.0, "r2": 0.141, "n": 3_725},
-    "Maison":      {"slope": 1_685.0, "intercept": 200_407.0, "r2": 0.139, "n":   393},
+    "Appartement": {"slope": 4_415.5, "intercept":  21_628.1, "r2": 0.671, "n": 1_040},
+    "Maison":      {"slope": 3_436.4, "intercept":  70_802.9, "r2": 0.477, "n":   366},
 }
