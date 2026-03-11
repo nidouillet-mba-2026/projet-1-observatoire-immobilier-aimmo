@@ -1,0 +1,8 @@
+[theme]
+# Streamlit gère nativement ces couleurs de base.
+# Cela évite les surcharges CSS !important trop agressives.
+base                    = "light"
+primaryColor            = "#E8714A"
+backgroundColor         = "#F4F6FA"
+secondaryBackgroundColor = "#FFFFFF"
+textColor               = "#1E293B"
