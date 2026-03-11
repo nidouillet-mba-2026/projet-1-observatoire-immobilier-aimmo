@@ -1,0 +1,6 @@
+# Dépendances Streamlit Community Cloud
+# Versions non fixées pour compatibilité Python 3.14 (Streamlit Cloud)
+
+streamlit
+pandas
+plotly
