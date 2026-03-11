@@ -3,6 +3,8 @@ Observatoire Immobilier AIMMO — Toulon ≤ 500 000 €
 Dashboard professionnel — Marché immobilier toulonnais en temps réel
 """
 
+import io
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -11,7 +13,7 @@ from pathlib import Path
 
 # ── Config page ────────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="AIMMO — Observatoire Immobilier Toulon",
+    page_title="NidDouillet by AImmo — Observatoire Immobilier Toulon",
     page_icon="🏠",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -116,6 +118,11 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 [aria-selected="true"][data-baseweb="tab"] {
     background: #1B2B4B !important;
     color: white !important;
+}
+
+/* ─── Contenu onglets — padding interne ─── */
+[data-baseweb="tab-panel"] > div:first-child {
+    padding: 20px 12px 12px 12px !important;
 }
 
 /* ─── Tags NLP ─── */
@@ -285,7 +292,7 @@ def compute_regression(df_input: pd.DataFrame) -> pd.DataFrame:
         grp = grp.dropna(subset=["valeur_fonciere", "surface_reelle_bati"]).copy()
         # Filtre les cas aberrants
         grp = grp[(grp["surface_reelle_bati"] > 10) & (grp["valeur_fonciere"] > 10_000)]
-        if len(grp) < 5:
+        if len(grp) < 2:
             for col in ["prix_predit", "ecart", "ecart_pct", "_slope", "_intercept"]:
                 grp[col] = float("nan")
             results.append(grp)
@@ -391,9 +398,12 @@ for _k, _v in [("asst_step", 0), ("asst_type", None),
 
 # ── Sidebar ────────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("## 🏠 AIMMO")
-    st.markdown("**Observatoire Immobilier**")
-    st.caption("Marché toulonnais — temps réel")
+    st.markdown("## 🏠 NidDouillet")
+    st.markdown(
+        '<span style="color:#E8714A;font-size:13px;font-weight:600;letter-spacing:0.3px;">'
+        'by AImmo</span>',
+        unsafe_allow_html=True,
+    )
     st.markdown("---")
 
     st.markdown("### 🎯 Filtres")
@@ -402,11 +412,31 @@ with st.sidebar:
     type_filtre = st.selectbox("Type de bien", ["Tous"] + list(types_dispo))
 
     budget_max = st.slider("Budget max (€)", 50_000, 500_000, 500_000, 10_000, format="%d €")
+
+    # Filtre Quartier / Commune
+    if not df_raw.empty and "nom_commune" in df_raw.columns:
+        _quartiers_dispo = sorted(df_raw["nom_commune"].dropna().unique().tolist())
+    else:
+        _quartiers_dispo = []
+    if _quartiers_dispo:
+        quartier_filtre = st.multiselect(
+            "📍 Quartier / Commune",
+            options=_quartiers_dispo,
+            default=[],
+            placeholder="Tous les quartiers",
+        )
+    else:
+        quartier_filtre = []
+
     surface_min = st.number_input("Surface min (m²)", 0, 300, 0, 5)
     pieces_min  = st.number_input("Pièces min",        0, 8,   0, 1)
 
     sources_dispo = sorted(df_raw["source"].dropna().unique()) if not df_raw.empty else []
-    source_filtre = st.selectbox("Source", ["Toutes"] + list(sources_dispo))
+    source_filtre = st.selectbox(
+        "Source",
+        ["Toutes"] + list(sources_dispo),
+        help="Sources actives : PAP · LeBonCoin · SeLoger",
+    )
 
     keyword = st.text_input("🔍 Mot-clé", placeholder="terrasse, parking…")
 
@@ -442,6 +472,8 @@ if pieces_min > 0:
     df = df[df["nombre_pieces_principales"] >= pieces_min]
 if source_filtre != "Toutes":
     df = df[df["source"] == source_filtre]
+if quartier_filtre and "nom_commune" in df.columns:
+    df = df[df["nom_commune"].isin(quartier_filtre)]
 if keyword:
     mask_kw = (
         df["description"].fillna("").str.contains(keyword, case=False) |
@@ -473,10 +505,10 @@ if not df_raw.empty and "date_mutation" in df_raw.columns:
 
 st.markdown(f"""
 <div class="aimmo-header">
-  <h1>🏠 Observatoire Immobilier — Toulon</h1>
+  <h1>🏠 Observatoire Immobilier — Toulon — Temps réel</h1>
   <div class="subtitle">
     <span class="badge">≤ 500 000 €</span>
-    <span class="badge">PAP · LeBoncoin</span>
+    <span class="badge">PAP · LeBonCoin · SeLoger</span>
     <span>🕐 Mis à jour le {last_upd_str}</span>
   </div>
 </div>
@@ -499,7 +531,7 @@ st.markdown("<br>", unsafe_allow_html=True)
 
 # ── Tabs ───────────────────────────────────────────────────────────────────────
 tab_analyse, tab_liste, tab_opps, tab_asst = st.tabs([
-    "📊  Analyse de marché",
+    "📊  Marché",
     "📋  Liste des biens",
     "💡  Opportunités",
     "🤖  Assistant",
@@ -513,8 +545,31 @@ with tab_analyse:
 
     col_l, col_r = st.columns(2, gap="medium")
 
-    # Distribution des prix
+    # ── 1. Types de biens (Pie chart) ────────────────────────────────────────
     with col_l:
+        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        st.markdown("#### 🏠 Types de biens")
+        if not df.empty:
+            typ = df["type_local"].value_counts().reset_index()
+            typ.columns = ["Type", "Annonces"]
+            fig4 = px.pie(
+                typ, names="Type", values="Annonces",
+                color="Type",
+                color_discrete_map={"Appartement": "#E8714A", "Maison": "#1B2B4B"},
+                hole=0.5,
+            )
+            fig4.update_layout(
+                height=280, margin=dict(t=10, b=10, l=0, r=0),
+                showlegend=True,
+                legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5),
+                paper_bgcolor="white",
+            )
+            fig4.update_traces(textinfo="percent+label", textfont_size=13)
+            st.plotly_chart(fig4, use_container_width=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # ── 2. Distribution des prix (Histogramme) ───────────────────────────────
+    with col_r:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown("#### 📊 Distribution des prix")
         df_h = df.dropna(subset=["valeur_fonciere"])
@@ -526,7 +581,7 @@ with tab_analyse:
                 template="simple_white",
             )
             fig.update_layout(
-                height=300, margin=dict(t=10, b=10, l=0, r=0),
+                height=280, margin=dict(t=10, b=10, l=0, r=0),
                 paper_bgcolor="white", plot_bgcolor="white",
                 bargap=0.1, legend_title_text="",
                 legend=dict(orientation="h", yanchor="bottom", y=1, xanchor="right", x=1),
@@ -537,8 +592,10 @@ with tab_analyse:
             st.info("Pas assez de données.")
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Prix vs Surface
-    with col_r:
+    col_l2, col_r2 = st.columns(2, gap="medium")
+
+    # ── 3. Prix vs Surface (Scatter plot) ────────────────────────────────────
+    with col_l2:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown("#### 🔵 Prix en fonction de la surface")
         df_sc = df.dropna(subset=["valeur_fonciere", "surface_reelle_bati"])
@@ -568,12 +625,10 @@ with tab_analyse:
             st.info("Pas assez de données.")
         st.markdown('</div>', unsafe_allow_html=True)
 
-    col_l2, col_r2 = st.columns(2, gap="medium")
-
-    # Répartition source
-    with col_l2:
+    # ── 4. Répartition par Sources (Bar chart) ───────────────────────────────
+    with col_r2:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown("#### 📡 Sources")
+        st.markdown("#### 📡 Répartition par Sources")
         if not df.empty:
             src = df["source"].value_counts().reset_index()
             src.columns = ["Source", "Annonces"]
@@ -585,32 +640,10 @@ with tab_analyse:
             )
             fig3.update_traces(textposition="outside", marker_line_width=0)
             fig3.update_layout(
-                height=260, margin=dict(t=20, b=10, l=0, r=0),
+                height=300, margin=dict(t=20, b=10, l=0, r=0),
                 showlegend=False, paper_bgcolor="white", plot_bgcolor="white",
             )
             st.plotly_chart(fig3, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    # Répartition type
-    with col_r2:
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown("#### 🏠 Types de biens")
-        if not df.empty:
-            typ = df["type_local"].value_counts().reset_index()
-            typ.columns = ["Type", "Annonces"]
-            fig4 = px.pie(
-                typ, names="Type", values="Annonces",
-                color="Type",
-                color_discrete_map={"Appartement": "#E8714A", "Maison": "#1B2B4B"},
-                hole=0.5,
-            )
-            fig4.update_layout(
-                height=260, margin=dict(t=10, b=10, l=0, r=0),
-                showlegend=True,
-                legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5),
-            )
-            fig4.update_traces(textinfo="percent+label", textfont_size=13)
-            st.plotly_chart(fig4, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
 
@@ -739,8 +772,8 @@ with tab_opps:
         methode = st.radio(
             "Référence d'évaluation",
             [
-                "📊 Dynamique — annonces actuelles",
                 "📚 DVF historique — 4 118 ventes Toulon",
+                "📊 Dynamique — annonces actuelles",
             ],
             index=0,
             horizontal=True,
@@ -987,6 +1020,54 @@ with tab_opps:
             st.markdown('</div>', unsafe_allow_html=True)
 
         # ── Fiches des top opportunités ─────────────────────────────────────────
+        # ── Export ────────────────────────────────────────────────────────────
+        if not df_opps.empty:
+            st.markdown("---")
+            st.markdown("#### 📥 Exporter les opportunités du jour")
+            _export_cols = {
+                "titre":               "Titre",
+                "type_local":          "Type",
+                "valeur_fonciere":     "Prix réel (€)",
+                _col_pp:               "Prix attendu (€)",
+                _col_e:                "Économie (€)",
+                _col_ep:               "Écart (%)",
+                "surface_reelle_bati": "Surface (m²)",
+                "nombre_pieces_principales": "Pièces",
+                "nom_commune":         "Commune",
+                "source":              "Source",
+                "url":                 "Lien",
+            }
+            _df_export = (
+                df_opps[[c for c in _export_cols if c in df_opps.columns]]
+                .copy()
+                .rename(columns=_export_cols)
+            )
+            _fname_base = f"opportunites_toulon_{pd.Timestamp.today().strftime('%Y%m%d')}"
+
+            _col_ex1, _col_ex2, _ = st.columns([1, 1, 3])
+
+            with _col_ex1:
+                _buf = io.BytesIO()
+                _df_export.to_excel(_buf, index=False, engine="openpyxl")
+                st.download_button(
+                    label="📊 Télécharger Excel",
+                    data=_buf.getvalue(),
+                    file_name=f"{_fname_base}.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    use_container_width=True,
+                )
+
+            with _col_ex2:
+                _csv_bytes = _df_export.to_csv(index=False).encode("utf-8-sig")
+                st.download_button(
+                    label="📄 Télécharger CSV",
+                    data=_csv_bytes,
+                    file_name=f"{_fname_base}.csv",
+                    mime="text/csv",
+                    use_container_width=True,
+                )
+
+        # ── Fiches détaillées ─────────────────────────────────────────────────
         if not df_opps.empty:
             st.markdown("---")
             st.markdown("#### 🔍 Fiches détaillées — Meilleures opportunités")
