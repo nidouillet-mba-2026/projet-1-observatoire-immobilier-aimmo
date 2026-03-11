@@ -22,7 +22,7 @@ def render_opportunities(
     with col_meth:
         methode = st.radio(
             "Référence d'évaluation",
-            ["📚 DVF historique — 4 118 ventes Toulon", "📊 Dynamique — annonces actuelles"],
+            ["📚 DVF historique", "📊 Dynamique — annonces actuelles"],
             index=0,
             horizontal=True,
         )
