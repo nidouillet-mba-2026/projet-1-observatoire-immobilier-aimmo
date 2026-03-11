@@ -132,6 +132,12 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .tag-orange { background: #FEF3C7; color: #D97706; }
 .tag-sea    { background: #CFFAFE; color: #0E7490; }
 
+/* ─── Badge marché ─── */
+.badge-opport  { background:#DCFCE7; color:#15803D; border:1px solid #86EFAC; font-weight:700; font-size:13px; padding:5px 14px; border-radius:8px; display:inline-block; }
+.badge-bonne   { background:#D1FAE5; color:#065F46; border:1px solid #6EE7B7; font-weight:600; font-size:12px; padding:4px 12px; border-radius:8px; display:inline-block; }
+.badge-normal  { background:#EFF6FF; color:#1D4ED8; border:1px solid #BFDBFE; font-weight:500; font-size:12px; padding:4px 12px; border-radius:8px; display:inline-block; }
+.badge-eleve   { background:#FEF3C7; color:#B45309; border:1px solid #FDE68A; font-weight:600; font-size:12px; padding:4px 12px; border-radius:8px; display:inline-block; }
+
 /* ─── Section card ─── */
 .section-card {
     background: white;
@@ -195,6 +201,18 @@ def extract_tags(description: str) -> list:
 
 def tags_html(tags: list) -> str:
     return "".join(f'<span class="tag {css}">{lbl}</span>' for lbl, css in tags)
+
+
+def market_badge_html(ecart_pct: float) -> str:
+    """Retourne un badge HTML selon la classification marché (4 niveaux)."""
+    if ecart_pct < -10:
+        return f'<span class="badge-opport">🎯 OPPORTUNITÉ &nbsp;{ecart_pct:.0f}%</span>'
+    elif ecart_pct < -5:
+        return f'<span class="badge-bonne">✅ Bonne affaire &nbsp;{ecart_pct:.0f}%</span>'
+    elif ecart_pct <= 5:
+        return f'<span class="badge-normal">✅ Prix normal &nbsp;{ecart_pct:+.0f}%</span>'
+    else:
+        return f'<span class="badge-eleve">⚠️ Prix élevé &nbsp;{ecart_pct:+.0f}%</span>'
 
 
 # ── Régression linéaire ─────────────────────────────────────────────────────────
@@ -334,6 +352,12 @@ if keyword:
 
 # ── Régression (calculée une fois après filtrage) ────────────────────────────────
 df_scored = compute_regression(df[df["type_local"].notna()].copy()) if not df.empty else pd.DataFrame()
+
+# Rattacher ecart_pct/ecart/prix_predit à df (pour les fiches tab_liste)
+if (not df_scored.empty and "ecart_pct" in df_scored.columns
+        and "url" in df_scored.columns and "url" in df.columns):
+    _reg_cols = df_scored[["url", "ecart_pct", "ecart", "prix_predit"]].dropna(subset=["url"])
+    df = df.merge(_reg_cols, on="url", how="left", suffixes=("", "_reg"))
 
 # ── Header ─────────────────────────────────────────────────────────────────────
 last_upd_str = "—"
@@ -527,18 +551,33 @@ with tab_liste:
             prix    = row.get("valeur_fonciere")
             surface = row.get("surface_reelle_bati")
             pm2     = row.get("prix_m2")
+            ep_lst  = row.get("ecart_pct")   # disponible si merge réussi
             tags    = row.get("tags", [])
             source  = str(row.get("source", "")).upper()
 
-            # Label expander
+            # Label expander — ajoute le badge marché si dispo
             lbl = titre
             if pd.notna(prix):    lbl += f"  ·  {prix:,.0f} €"
             if pd.notna(surface): lbl += f"  ·  {surface:.0f} m²"
+            if pd.notna(ep_lst):
+                ep_f = float(ep_lst)
+                if ep_f < -10:   lbl += "  🎯"
+                elif ep_f < -5:  lbl += "  ✅"
+                elif ep_f > 10:  lbl += "  ⚠️"
 
             with st.expander(lbl):
                 left, right = st.columns([1, 2], gap="medium")
 
                 with left:
+                    # Badge marché (classification 4 niveaux)
+                    if pd.notna(ep_lst):
+                        st.markdown(market_badge_html(float(ep_lst)), unsafe_allow_html=True)
+                        prix_p  = row.get("prix_predit")
+                        ecart_e = row.get("ecart")
+                        if pd.notna(prix_p) and pd.notna(ecart_e):
+                            st.caption(f"Prix attendu : {prix_p:,.0f} €  ·  Écart : {ecart_e:+,.0f} €")
+                        st.markdown("")
+
                     # Badges prix
                     if pd.notna(prix):
                         st.markdown(
@@ -806,6 +845,21 @@ with tab_opps:
                     left, right = st.columns([1, 2], gap="medium")
 
                     with left:
+                        # Badge marché 4 niveaux
+                        if pd.notna(ecart_p):
+                            st.markdown(market_badge_html(float(ecart_p)), unsafe_allow_html=True)
+                            if pd.notna(ecart_e):
+                                prix_p = row.get("prix_predit")
+                                st.markdown(
+                                    f'<div style="background:#F0FDF4;border:1px solid #BBF7D0;'
+                                    f'border-radius:8px;padding:6px 12px;margin:6px 0;">'
+                                    f'<span style="color:#475569;font-size:12px;">'
+                                    f'Prix attendu : <b>{prix_p:,.0f} €</b><br>'
+                                    f'💰 Économie : <b>{abs(ecart_e):,.0f} €</b></span></div>',
+                                    unsafe_allow_html=True,
+                                )
+                            st.markdown("")
+
                         if pd.notna(prix):
                             st.markdown(
                                 f'<span class="prix-badge">{prix:,.0f} €</span>'
@@ -814,19 +868,6 @@ with tab_opps:
                                 unsafe_allow_html=True,
                             )
                             st.markdown("")
-
-                        if pd.notna(ecart_p) and pd.notna(ecart_e):
-                            savings_color = "#16A34A" if ecart_e < 0 else "#DC2626"
-                            st.markdown(
-                                f'<div style="background:#F0FDF4;border:1px solid #BBF7D0;'
-                                f'border-radius:8px;padding:8px 12px;margin:6px 0;">'
-                                f'<span style="color:{savings_color};font-weight:700;font-size:14px;">'
-                                f'{"📉" if ecart_e < 0 else "📈"} {ecart_p:+.1f} % vs marché</span><br>'
-                                f'<span style="color:#475569;font-size:12px;">'
-                                f'Soit {abs(ecart_e):,.0f} € {"en dessous" if ecart_e < 0 else "au dessus"} '
-                                f'du prix attendu</span></div>',
-                                unsafe_allow_html=True,
-                            )
 
                         info_lines = [
                             ("🏷️ Source",  source),
