@@ -28,10 +28,11 @@ jobs:
           TZ: Europe/Paris
 
     steps:
-      # ── 1. Checkout ─────────────────────────────────────────────────────────
-      - name: "📥 Checkout"
+      # ── 1. Checkout main ────────────────────────────────────────────────────
+      - name: "📥 Checkout main"
         uses: actions/checkout@v4
         with:
+          ref: main                         # toujours sur main
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # ── 2. Python ───────────────────────────────────────────────────────────
@@ -84,6 +85,6 @@ jobs:
             # Compte le nombre d'annonces (lignes - 1 pour l'en-tête)
             N=$(( $(wc -l < data/annonces.csv) - 1 ))
             git commit -m "chore(data): ${N} annonces mises à jour [skip ci]"
-            git push
+            git push origin main            # cible explicitement main
             echo "✅ annonces.csv commité ($N annonces)."
           fi
