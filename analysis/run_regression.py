@@ -34,7 +34,7 @@ print("RÉGRESSION LINÉAIRE : Prix = alpha + beta × Surface")
 print("=" * 70)
 print("\n📁 Chargement des données...")
 
-df = pd.read_csv("donnees/dvf-nettoyer_800_day.csv")
+df = pd.read_csv("data/dvf_toulon.csv")
 
 print(f"   ✅ {len(df)} transactions chargées")
 
@@ -137,6 +137,59 @@ else:
 
 print(f"   {qualite}")
 print(f"   {interpretation}")
+
+print("\n📊 Régression par section cadastrale (proxy quartier) :")
+print("-" * 100)
+print(f"{'Section':10s} {'Quartier':25s} {'n':>5s} {'R²':>6s} {'Prix moy':>12s} {'Surf moy':>9s} {'Prix/m²':>9s} {'Modèle'}")
+print("-" * 100)
+
+# Mapping sections → noms de quartiers (à adapter selon votre connaissance du terrain)
+QUARTIERS = {
+    "000BV": "Mourillon",
+    "000BX": "Mourillon Est",
+    "000BY": "Mourillon Centre",
+    "000CL": "Centre-Ville",
+    "000BT": "Port Marchand",
+    "000CM": "Haute-Ville",
+    # Ajoutez d'autres correspondances...
+}
+col_quartier = "section_prefixe"
+
+quartiers = df[col_quartier].unique()
+for q in sorted(quartiers):
+    sub = df[df[col_quartier] == q]
+    if len(sub) < 10:
+        continue
+    
+    surfaces = sub["surface_reelle_bati"].tolist()
+    prix = sub["valeur_fonciere"].tolist()
+    
+    # Statistiques descriptives
+    prix_moyen = int(sum(prix) / len(prix))
+    surf_moyenne = int(sum(surfaces) / len(surfaces))
+    prix_m2_moyen = int(prix_moyen / surf_moyenne) if surf_moyenne > 0 else 0
+    
+    # Régression
+    alpha_q, beta_q = least_squares_fit(surfaces, prix)
+    r2_q = r_squared(alpha_q, beta_q, surfaces, prix)
+    
+    # Nom du quartier
+    nom_quartier = QUARTIERS.get(q, "Section " + q)
+    
+    # Qualité du modèle
+    if r2_q >= 0.8:
+        qualite = "✅"
+    elif r2_q >= 0.6:
+        qualite = "⚠️"
+    else:
+        qualite = "❌"
+    
+    print(f"{q:10s} {nom_quartier:25s} {len(sub):5d} {r2_q:6.2f} {prix_moyen:12,d}€ {surf_moyenne:9.1f}m² {prix_m2_moyen:9,d}€ {qualite}")
+
+print("\n💡 Interprétation pour agents immobiliers :")
+print("   ✅ R² ≥ 0.80 : Modèle fiable — la surface explique bien le prix")
+print("   ⚠️  R² 0.60-0.80 : Modèle correct — autres facteurs importants (standing, vue)")
+print("   ❌ R² < 0.60 : Modèle faible — forte hétérogénéité du quartier")
 
 # Détails du calcul
 ss_res = sum_of_sqerrors(alpha, beta, surfaces, prix)

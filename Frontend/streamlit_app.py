@@ -241,6 +241,11 @@ DVF_REGRESSION: dict[str, dict] = {
     "Maison":      {"slope": 1_685.0, "intercept": 200_407.0, "r2": 0.139, "n":   393},
 }
 
+def extract_tags(description: str) -> list:
+    if not isinstance(description, str):
+        return []
+    d = description.lower()
+    return [(lbl, css) for lbl, (kws, css) in NLP_TAGS.items() if any(k in d for k in kws)]
 
 def extract_tags(description: str) -> list:
     if not isinstance(description, str):

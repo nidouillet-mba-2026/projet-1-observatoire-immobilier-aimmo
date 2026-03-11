@@ -1,0 +1,954 @@
+{
+  "modeles_globaux": {
+    "appartements": {
+      "alpha": 21598.74168151972,
+      "beta": 4421.762989311722,
+      "r2": 0.6709228005063554,
+      "nb_biens": 1044
+    },
+    "maisons": {
+      "alpha": 70802.87320461468,
+      "beta": 3436.3817721526325,
+      "r2": 0.4770177014492949,
+      "nb_biens": 366
+    }
+  },
+  "donnees_quartiers": {
+    "appartements": [
+      {
+        "section": "000AH",
+        "quartier": "Le Faron",
+        "nb_biens": 31,
+        "r2": 0.30367911167327166,
+        "prix_moyen": 239538,
+        "prix_m2": 3499,
+        "alpha": 49170.32546788969,
+        "beta": 2781.065462061932
+      },
+      {
+        "section": "000AK",
+        "quartier": "Section 000AK",
+        "nb_biens": 18,
+        "r2": 0.5157114881885015,
+        "prix_moyen": 222232,
+        "prix_m2": 3260,
+        "alpha": 1457.2776727968594,
+        "beta": 3238.7634978725805
+      },
+      {
+        "section": "000AM",
+        "quartier": "Saint-Jean du Var",
+        "nb_biens": 22,
+        "r2": 0.016499192378381933,
+        "prix_moyen": 310534,
+        "prix_m2": 5117,
+        "alpha": 264757.6435638524,
+        "beta": 754.375911307301
+      },
+      {
+        "section": "000AN",
+        "quartier": "Saint-Jean du Var Sud",
+        "nb_biens": 105,
+        "r2": 5.44506792655719e-05,
+        "prix_moyen": 249209,
+        "prix_m2": 4342,
+        "alpha": 251282.0874796618,
+        "beta": -36.106403147110505
+      },
+      {
+        "section": "000AO",
+        "quartier": "Section 000AO",
+        "nb_biens": 18,
+        "r2": 0.37228810837825366,
+        "prix_moyen": 206261,
+        "prix_m2": 3444,
+        "alpha": 78693.6706549118,
+        "beta": 2130.0824937027714
+      },
+      {
+        "section": "000AP",
+        "quartier": "Rodeilhac",
+        "nb_biens": 43,
+        "r2": 0.4565932770060057,
+        "prix_moyen": 142791,
+        "prix_m2": 2782,
+        "alpha": 28260.275661984866,
+        "beta": 2231.458154297531
+      },
+      {
+        "section": "000AR",
+        "quartier": "Les Routes",
+        "nb_biens": 41,
+        "r2": 0.48066063070522613,
+        "prix_moyen": 184750,
+        "prix_m2": 3141,
+        "alpha": -5876.996349229361,
+        "beta": 3241.6957073075087
+      },
+      {
+        "section": "000AS",
+        "quartier": "Les Routes Sud",
+        "nb_biens": 39,
+        "r2": 0.2443070087565612,
+        "prix_moyen": 145005,
+        "prix_m2": 2824,
+        "alpha": 71368.19541644561,
+        "beta": 1434.502187192118
+      },
+      {
+        "section": "000AT",
+        "quartier": "Claret",
+        "nb_biens": 30,
+        "r2": 0.26326756761773673,
+        "prix_moyen": 220772,
+        "prix_m2": 3601,
+        "alpha": -14259.944320418232,
+        "beta": 3834.1317724918695
+      },
+      {
+        "section": "000AV",
+        "quartier": "Section 000AV",
+        "nb_biens": 27,
+        "r2": 0.177403282489614,
+        "prix_moyen": 162826,
+        "prix_m2": 3278,
+        "alpha": 27602.381395216566,
+        "beta": 2722.6388533401587
+      },
+      {
+        "section": "000AW",
+        "quartier": "Section 000AW",
+        "nb_biens": 35,
+        "r2": 0.0559180631922922,
+        "prix_moyen": 137194,
+        "prix_m2": 2085,
+        "alpha": 53784.888106378334,
+        "beta": 1268.1724223617541
+      },
+      {
+        "section": "000AX",
+        "quartier": "Siblas",
+        "nb_biens": 39,
+        "r2": 0.06917995311282488,
+        "prix_moyen": 182435,
+        "prix_m2": 3217,
+        "alpha": 104955.45779146551,
+        "beta": 1366.6793967131816
+      },
+      {
+        "section": "000AY",
+        "quartier": "Section 000AY",
+        "nb_biens": 24,
+        "r2": 0.02091661103739817,
+        "prix_moyen": 100008,
+        "prix_m2": 1618,
+        "alpha": 68635.6038556523,
+        "beta": 507.7245498748111
+      },
+      {
+        "section": "000AZ",
+        "quartier": "Section 000AZ",
+        "nb_biens": 16,
+        "r2": 0.358628452640143,
+        "prix_moyen": 170197,
+        "prix_m2": 2418,
+        "alpha": 95687.90827560896,
+        "beta": 1058.7570760126612
+      },
+      {
+        "section": "000BC",
+        "quartier": "Section 000BC",
+        "nb_biens": 17,
+        "r2": 0.1617589805402252,
+        "prix_moyen": 192112,
+        "prix_m2": 2944,
+        "alpha": 28042.912497669487,
+        "beta": 2515.04101671742
+      },
+      {
+        "section": "000BD",
+        "quartier": "Cap Brun",
+        "nb_biens": 41,
+        "r2": 0.25594029019854225,
+        "prix_moyen": 170322,
+        "prix_m2": 3169,
+        "alpha": 37654.22478608036,
+        "beta": 2469.091594993511
+      },
+      {
+        "section": "000BE",
+        "quartier": "Cap Brun Est",
+        "nb_biens": 111,
+        "r2": 0.02383846724355665,
+        "prix_moyen": 156600,
+        "prix_m2": 2925,
+        "alpha": 115690.93172824179,
+        "beta": 764.3364043368391
+      },
+      {
+        "section": "000BH",
+        "quartier": "Pont du Las",
+        "nb_biens": 45,
+        "r2": 0.2407955862871083,
+        "prix_moyen": 243205,
+        "prix_m2": 3887,
+        "alpha": 76515.9741258437,
+        "beta": 2664.6647120202606
+      },
+      {
+        "section": "000BI",
+        "quartier": "Section 000BI",
+        "nb_biens": 13,
+        "r2": 0.2901362450674566,
+        "prix_moyen": 291530,
+        "prix_m2": 4743,
+        "alpha": 6402.846585748543,
+        "beta": 4639.12765254727
+      },
+      {
+        "section": "000BK",
+        "quartier": "Pont du Las Est",
+        "nb_biens": 16,
+        "r2": 0.5389253409596226,
+        "prix_moyen": 302998,
+        "prix_m2": 4762,
+        "alpha": 85732.40706855635,
+        "beta": 3414.795173775146
+      },
+      {
+        "section": "000BN",
+        "quartier": "Le Jonquet",
+        "nb_biens": 15,
+        "r2": 0.42275819136662296,
+        "prix_moyen": 291420,
+        "prix_m2": 4889,
+        "alpha": -63493.66994074191,
+        "beta": 5954.927347999025
+      },
+      {
+        "section": "000BO",
+        "quartier": "Le Jonquet Sud",
+        "nb_biens": 24,
+        "r2": 0.5758280190093399,
+        "prix_moyen": 287352,
+        "prix_m2": 4455,
+        "alpha": -27033.38337869791,
+        "beta": 4874.204264269219
+      },
+      {
+        "section": "000BP",
+        "quartier": "La Loubière",
+        "nb_biens": 57,
+        "r2": 0.270216534356434,
+        "prix_moyen": 237686,
+        "prix_m2": 3564,
+        "alpha": 52172.89179958479,
+        "beta": 2781.9682103193018
+      },
+      {
+        "section": "000BR",
+        "quartier": "Saint-Roch",
+        "nb_biens": 99,
+        "r2": 0.0003608535711937533,
+        "prix_moyen": 198039,
+        "prix_m2": 3452,
+        "alpha": 204435.16895900163,
+        "beta": -111.51316078569234
+      },
+      {
+        "section": "000BS",
+        "quartier": "Saint-Roch Sud",
+        "nb_biens": 39,
+        "r2": 0.5256669866979853,
+        "prix_moyen": 281619,
+        "prix_m2": 4002,
+        "alpha": 24477.15442146387,
+        "beta": 3654.7134247678237
+      },
+      {
+        "section": "000BT",
+        "quartier": "Port Marchand",
+        "nb_biens": 35,
+        "r2": 0.6348752013248242,
+        "prix_moyen": 239106,
+        "prix_m2": 4038,
+        "alpha": -27395.817529482185,
+        "beta": 4501.727612708434
+      },
+      {
+        "section": "000BV",
+        "quartier": "Mourillon",
+        "nb_biens": 183,
+        "r2": 0.25040820487157056,
+        "prix_moyen": 207972,
+        "prix_m2": 4415,
+        "alpha": 50392.68105132261,
+        "beta": 3345.75393753428
+      },
+      {
+        "section": "000BW",
+        "quartier": "Mourillon Ouest",
+        "nb_biens": 23,
+        "r2": 0.7216628251564026,
+        "prix_moyen": 314767,
+        "prix_m2": 4941,
+        "alpha": -113525.2707608419,
+        "beta": 6724.04452389035
+      },
+      {
+        "section": "000BX",
+        "quartier": "Mourillon Est",
+        "nb_biens": 71,
+        "r2": 0.5897854324381808,
+        "prix_moyen": 206177,
+        "prix_m2": 3948,
+        "alpha": 13303.978993083903,
+        "beta": 3694.1037203914334
+      },
+      {
+        "section": "000BY",
+        "quartier": "Mourillon Centre",
+        "nb_biens": 93,
+        "r2": 0.5378843645338292,
+        "prix_moyen": 181564,
+        "prix_m2": 3006,
+        "alpha": -5393.068885341199,
+        "beta": 3095.984402837737
+      },
+      {
+        "section": "000BZ",
+        "quartier": "Section 000BZ",
+        "nb_biens": 106,
+        "r2": 0.38185995382390325,
+        "prix_moyen": 183544,
+        "prix_m2": 2442,
+        "alpha": 27319.473053617432,
+        "beta": 2079.3354917524553
+      },
+      {
+        "section": "000CD",
+        "quartier": "Section 000CD",
+        "nb_biens": 111,
+        "r2": 0.3820228570823381,
+        "prix_moyen": 127025,
+        "prix_m2": 2097,
+        "alpha": 45852.875699494674,
+        "beta": 1340.601408623135
+      },
+      {
+        "section": "000CE",
+        "quartier": "Section 000CE",
+        "nb_biens": 75,
+        "r2": 0.38136033266563996,
+        "prix_moyen": 126200,
+        "prix_m2": 2310,
+        "alpha": 36456.81514686065,
+        "beta": 1642.8552267477305
+      },
+      {
+        "section": "000CH",
+        "quartier": "Le Cours Lafayette",
+        "nb_biens": 79,
+        "r2": 0.007536713823544372,
+        "prix_moyen": 147124,
+        "prix_m2": 3237,
+        "alpha": 123886.30402133254,
+        "beta": 511.3612764107883
+      },
+      {
+        "section": "000CI",
+        "quartier": "Valbertrand",
+        "nb_biens": 106,
+        "r2": 0.34879298638636413,
+        "prix_moyen": 150686,
+        "prix_m2": 2682,
+        "alpha": 50868.325913476656,
+        "beta": 1777.0774543452258
+      },
+      {
+        "section": "000CK",
+        "quartier": "La Serinette",
+        "nb_biens": 70,
+        "r2": 0.49111149884605454,
+        "prix_moyen": 163366,
+        "prix_m2": 2763,
+        "alpha": 20483.26524501067,
+        "beta": 2417.075467097451
+      },
+      {
+        "section": "000CL",
+        "quartier": "Centre-Ville",
+        "nb_biens": 173,
+        "r2": 0.0012077520076866355,
+        "prix_moyen": 158387,
+        "prix_m2": 4401,
+        "alpha": 149269.70717025493,
+        "beta": 253.38532683468196
+      },
+      {
+        "section": "000CM",
+        "quartier": "Haute-Ville",
+        "nb_biens": 79,
+        "r2": 0.30725727282210824,
+        "prix_moyen": 134860,
+        "prix_m2": 3105,
+        "alpha": 13886.96964540337,
+        "beta": 2785.4609146059847
+      },
+      {
+        "section": "000CN",
+        "quartier": "Besagne",
+        "nb_biens": 212,
+        "r2": 0.0942083368785338,
+        "prix_moyen": 158685,
+        "prix_m2": 3914,
+        "alpha": 72459.0367627367,
+        "beta": 2127.3225539741443
+      },
+      {
+        "section": "000CO",
+        "quartier": "Besagne Sud",
+        "nb_biens": 139,
+        "r2": 0.11117116195459975,
+        "prix_moyen": 186380,
+        "prix_m2": 3186,
+        "alpha": 94529.93874505143,
+        "beta": 1570.1982492236932
+      },
+      {
+        "section": "000CP",
+        "quartier": "La Rode",
+        "nb_biens": 92,
+        "r2": 0.31396551263164685,
+        "prix_moyen": 143687,
+        "prix_m2": 2641,
+        "alpha": 38291.85122922178,
+        "beta": 1937.7303530998395
+      },
+      {
+        "section": "000CW",
+        "quartier": "Brunet",
+        "nb_biens": 133,
+        "r2": 0.02328687701098675,
+        "prix_moyen": 135835,
+        "prix_m2": 2326,
+        "alpha": 99868.74583520013,
+        "beta": 615.8924686389062
+      },
+      {
+        "section": "000CX",
+        "quartier": "Le Champ de Mars",
+        "nb_biens": 177,
+        "r2": 5.8004296103253417e-05,
+        "prix_moyen": 134080,
+        "prix_m2": 2622,
+        "alpha": 132380.35209438528,
+        "beta": 33.25363819399036
+      },
+      {
+        "section": "000CY",
+        "quartier": "Sainte-Musse",
+        "nb_biens": 287,
+        "r2": 0.07501027511747782,
+        "prix_moyen": 133941,
+        "prix_m2": 2492,
+        "alpha": 81737.66124446674,
+        "beta": 971.4961887458207
+      },
+      {
+        "section": "000CZ",
+        "quartier": "Section 000CZ",
+        "nb_biens": 55,
+        "r2": 0.33586801692312296,
+        "prix_moyen": 146220,
+        "prix_m2": 2582,
+        "alpha": 36530.848437178836,
+        "beta": 1937.360319831459
+      },
+      {
+        "section": "000DH",
+        "quartier": "Section 000DH",
+        "nb_biens": 22,
+        "r2": 0.19199925107458748,
+        "prix_moyen": 173280,
+        "prix_m2": 3397,
+        "alpha": 10578.467827830347,
+        "beta": 3190.2394900068916
+      },
+      {
+        "section": "000DI",
+        "quartier": "La Beaucaire",
+        "nb_biens": 48,
+        "r2": 0.21956161058806312,
+        "prix_moyen": 187867,
+        "prix_m2": 3045,
+        "alpha": 24271.095974050753,
+        "beta": 2652.020733956624
+      },
+      {
+        "section": "000DK",
+        "quartier": "La Valette Frontière",
+        "nb_biens": 60,
+        "r2": 0.06016505756195678,
+        "prix_moyen": 141794,
+        "prix_m2": 2490,
+        "alpha": 93506.37149679859,
+        "beta": 848.1448214848026
+      },
+      {
+        "section": "000DL",
+        "quartier": "Dardennes",
+        "nb_biens": 48,
+        "r2": 0.023663008630838367,
+        "prix_moyen": 205712,
+        "prix_m2": 3745,
+        "alpha": 155001.5138485107,
+        "beta": 923.4132531378931
+      },
+      {
+        "section": "000DM",
+        "quartier": "Section 000DM",
+        "nb_biens": 39,
+        "r2": 0.0018769351065103246,
+        "prix_moyen": 92677,
+        "prix_m2": 1326,
+        "alpha": 111085.43326126476,
+        "beta": -263.5484204072413
+      },
+      {
+        "section": "000DP",
+        "quartier": "Section 000DP",
+        "nb_biens": 20,
+        "r2": 0.16787682054381792,
+        "prix_moyen": 203519,
+        "prix_m2": 3261,
+        "alpha": 89672.32864992529,
+        "beta": 1824.473899840941
+      },
+      {
+        "section": "000DR",
+        "quartier": "Section 000DR",
+        "nb_biens": 33,
+        "r2": 0.18003290040159592,
+        "prix_moyen": 150585,
+        "prix_m2": 2632,
+        "alpha": 96989.07859962044,
+        "beta": 936.8063592227361
+      },
+      {
+        "section": "000DS",
+        "quartier": "Section 000DS",
+        "nb_biens": 50,
+        "r2": 0.6852747451486073,
+        "prix_moyen": 165501,
+        "prix_m2": 2654,
+        "alpha": -67726.07509619478,
+        "beta": 3741.2116473563487
+      },
+      {
+        "section": "000DT",
+        "quartier": "Les Lices",
+        "nb_biens": 44,
+        "r2": 0.012512932290293932,
+        "prix_moyen": 236925,
+        "prix_m2": 3801,
+        "alpha": 281467.525647149,
+        "beta": -714.7535114786859
+      },
+      {
+        "section": "000DV",
+        "quartier": "Le Revest Frontière",
+        "nb_biens": 40,
+        "r2": 0.27532892210409754,
+        "prix_moyen": 182526,
+        "prix_m2": 3093,
+        "alpha": 79733.01753827906,
+        "beta": 1742.2662281647617
+      },
+      {
+        "section": "000DX",
+        "quartier": "Section 000DX",
+        "nb_biens": 11,
+        "r2": 0.002474823640419399,
+        "prix_moyen": 216702,
+        "prix_m2": 3390,
+        "alpha": 210169.9022855638,
+        "beta": 102.22343507652688
+      },
+      {
+        "section": "000DY",
+        "quartier": "Section 000DY",
+        "nb_biens": 13,
+        "r2": 0.7218614945757865,
+        "prix_moyen": 169003,
+        "prix_m2": 3085,
+        "alpha": -2556.3776078402007,
+        "beta": 3132.419815873487
+      },
+      {
+        "section": "000EI",
+        "quartier": "Section 000EI",
+        "nb_biens": 11,
+        "r2": 0.40538469072854044,
+        "prix_moyen": 197065,
+        "prix_m2": 3588,
+        "alpha": 95740.79793219524,
+        "beta": 1845.3182495792255
+      },
+      {
+        "section": "000EW",
+        "quartier": "Section 000EW",
+        "nb_biens": 30,
+        "r2": 0.029869339425188324,
+        "prix_moyen": 161053,
+        "prix_m2": 2601,
+        "alpha": 106461.0781349162,
+        "beta": 881.9427334154628
+      }
+    ],
+    "maisons": [
+      {
+        "section": "000AO",
+        "quartier": "Section 000AO",
+        "nb_biens": 12,
+        "r2": 0.322193611450623,
+        "prix_moyen": 384566,
+        "prix_m2": 4733,
+        "alpha": 48804.412114296574,
+        "beta": 4132.458517567632
+      },
+      {
+        "section": "000AR",
+        "quartier": "Les Routes",
+        "nb_biens": 20,
+        "r2": 0.18065646359491883,
+        "prix_moyen": 320928,
+        "prix_m2": 4064,
+        "alpha": 82834.49470961114,
+        "beta": 3015.756875115755
+      },
+      {
+        "section": "000AS",
+        "quartier": "Les Routes Sud",
+        "nb_biens": 13,
+        "r2": 0.272900718266607,
+        "prix_moyen": 393335,
+        "prix_m2": 4153,
+        "alpha": 20013.73709138902,
+        "beta": 3942.4706887180687
+      },
+      {
+        "section": "000AV",
+        "quartier": "Section 000AV",
+        "nb_biens": 12,
+        "r2": 0.47221117223486886,
+        "prix_moyen": 368385,
+        "prix_m2": 4682,
+        "alpha": 158645.03801206333,
+        "beta": 2666.1912540839407
+      },
+      {
+        "section": "000AX",
+        "quartier": "Siblas",
+        "nb_biens": 16,
+        "r2": 0.3576281321826046,
+        "prix_moyen": 299100,
+        "prix_m2": 4038,
+        "alpha": 157183.23410542784,
+        "beta": 1916.1757420364174
+      },
+      {
+        "section": "000BD",
+        "quartier": "Cap Brun",
+        "nb_biens": 12,
+        "r2": 0.5963370293108154,
+        "prix_moyen": 315202,
+        "prix_m2": 3851,
+        "alpha": 165367.66575021407,
+        "beta": 1830.9755712804797
+      },
+      {
+        "section": "000BP",
+        "quartier": "La Loubière",
+        "nb_biens": 13,
+        "r2": 0.10017710458181717,
+        "prix_moyen": 435953,
+        "prix_m2": 5019,
+        "alpha": 292615.28503293206,
+        "beta": 1650.4883034294799
+      },
+      {
+        "section": "000CZ",
+        "quartier": "Section 000CZ",
+        "nb_biens": 11,
+        "r2": 0.2708894788554552,
+        "prix_moyen": 400248,
+        "prix_m2": 4708,
+        "alpha": 153386.84090909088,
+        "beta": 2904.25
+      },
+      {
+        "section": "000DE",
+        "quartier": "Section 000DE",
+        "nb_biens": 11,
+        "r2": 0.2894323439883253,
+        "prix_moyen": 422086,
+        "prix_m2": 5689,
+        "alpha": 318803.0626450116,
+        "beta": 1392.2994006187162
+      },
+      {
+        "section": "000DH",
+        "quartier": "Section 000DH",
+        "nb_biens": 10,
+        "r2": 0.045051449898163676,
+        "prix_moyen": 254789,
+        "prix_m2": 3814,
+        "alpha": 192199.65808652504,
+        "beta": 936.9661963095053
+      },
+      {
+        "section": "000DI",
+        "quartier": "La Beaucaire",
+        "nb_biens": 16,
+        "r2": 0.5660465503969434,
+        "prix_moyen": 318828,
+        "prix_m2": 4424,
+        "alpha": 81423.69447825951,
+        "beta": 3294.432687205419
+      },
+      {
+        "section": "000DL",
+        "quartier": "Dardennes",
+        "nb_biens": 13,
+        "r2": 0.19336050359202872,
+        "prix_moyen": 265930,
+        "prix_m2": 4155,
+        "alpha": 76021.39423076928,
+        "beta": 2967.3339843749995
+      },
+      {
+        "section": "000DP",
+        "quartier": "Section 000DP",
+        "nb_biens": 14,
+        "r2": 0.5870323441812186,
+        "prix_moyen": 335566,
+        "prix_m2": 4018,
+        "alpha": 97211.77232337717,
+        "beta": 2854.544360541249
+      },
+      {
+        "section": "000DR",
+        "quartier": "Section 000DR",
+        "nb_biens": 10,
+        "r2": 0.0006014423223117404,
+        "prix_moyen": 388749,
+        "prix_m2": 5148,
+        "alpha": 380945.2680734662,
+        "beta": 103.36068776865963
+      },
+      {
+        "section": "000DS",
+        "quartier": "Section 000DS",
+        "nb_biens": 10,
+        "r2": 0.27999661040552637,
+        "prix_moyen": 364662,
+        "prix_m2": 4941,
+        "alpha": 154237.8856118928,
+        "beta": 2851.2781895407484
+      },
+      {
+        "section": "000DV",
+        "quartier": "Le Revest Frontière",
+        "nb_biens": 15,
+        "r2": 0.34089854904869166,
+        "prix_moyen": 394928,
+        "prix_m2": 4410,
+        "alpha": -3409.109532088565,
+        "beta": 4449.036964245219
+      },
+      {
+        "section": "000EH",
+        "quartier": "Section 000EH",
+        "nb_biens": 14,
+        "r2": 0.15558237178335232,
+        "prix_moyen": 305558,
+        "prix_m2": 4227,
+        "alpha": 187857.29300358877,
+        "beta": 1628.2805315709059
+      },
+      {
+        "section": "000ES",
+        "quartier": "Section 000ES",
+        "nb_biens": 13,
+        "r2": 0.016928985979910438,
+        "prix_moyen": 436399,
+        "prix_m2": 5074,
+        "alpha": 378527.86928154354,
+        "beta": 672.9308580858086
+      }
+    ]
+  },
+  "top_opportunites": [
+    {
+      "type": "Maison",
+      "surface": 100.0,
+      "prix_reel": 200000.0,
+      "prix_predit": 414441.0504198779,
+      "ecart_pct": -51.742232146797164,
+      "economie": 214441.05041987792
+    },
+    {
+      "type": "Maison",
+      "surface": 118.0,
+      "prix_reel": 270000.0,
+      "prix_predit": 476295.9223186253,
+      "ecart_pct": -43.31255269085016,
+      "economie": 206295.92231862532
+    },
+    {
+      "type": "Maison",
+      "surface": 120.0,
+      "prix_reel": 285000.0,
+      "prix_predit": 483168.68586293055,
+      "ecart_pct": -41.014389313952506,
+      "economie": 198168.68586293055
+    },
+    {
+      "type": "Maison",
+      "surface": 118.0,
+      "prix_reel": 280000.0,
+      "prix_predit": 476295.9223186253,
+      "ecart_pct": -41.21301760532609,
+      "economie": 196295.92231862532
+    },
+    {
+      "type": "Maison",
+      "surface": 118.0,
+      "prix_reel": 280000.0,
+      "prix_predit": 476295.9223186253,
+      "ecart_pct": -41.21301760532609,
+      "economie": 196295.92231862532
+    },
+    {
+      "type": "Maison",
+      "surface": 70.0,
+      "prix_reel": 150000.0,
+      "prix_predit": 311349.597255299,
+      "ecart_pct": -51.8226452443413,
+      "economie": 161349.59725529898
+    },
+    {
+      "type": "Maison",
+      "surface": 60.0,
+      "prix_reel": 120000.0,
+      "prix_predit": 276985.7795337726,
+      "ecart_pct": -56.67647624293705,
+      "economie": 156985.7795337726
+    },
+    {
+      "type": "Maison",
+      "surface": 120.0,
+      "prix_reel": 330000.0,
+      "prix_predit": 483168.68586293055,
+      "ecart_pct": -31.700871837208165,
+      "economie": 153168.68586293055
+    },
+    {
+      "type": "Maison",
+      "surface": 115.0,
+      "prix_reel": 320000.0,
+      "prix_predit": 465986.7770021674,
+      "ecart_pct": -31.328523513337466,
+      "economie": 145986.77700216742
+    },
+    {
+      "type": "Maison",
+      "surface": 84.0,
+      "prix_reel": 215000.0,
+      "prix_predit": 359458.9420654358,
+      "ecart_pct": -40.18788383323583,
+      "economie": 144458.9420654358
+    },
+    {
+      "type": "Maison",
+      "surface": 90.0,
+      "prix_reel": 237700.0,
+      "prix_predit": 380077.2326983516,
+      "ecart_pct": -37.46007928113635,
+      "economie": 142377.2326983516
+    },
+    {
+      "type": "Maison",
+      "surface": 57.0,
+      "prix_reel": 125000.0,
+      "prix_predit": 266676.6342173148,
+      "ecart_pct": -53.12675204302395,
+      "economie": 141676.63421731477
+    },
+    {
+      "type": "Maison",
+      "surface": 114.0,
+      "prix_reel": 325000.0,
+      "prix_predit": 462550.3952300148,
+      "ecart_pct": -29.737385731043297,
+      "economie": 137550.3952300148
+    },
+    {
+      "type": "Maison",
+      "surface": 118.0,
+      "prix_reel": 345000.0,
+      "prix_predit": 476295.9223186253,
+      "ecart_pct": -27.566039549419646,
+      "economie": 131295.92231862532
+    },
+    {
+      "type": "Maison",
+      "surface": 80.0,
+      "prix_reel": 215500.0,
+      "prix_predit": 345713.4149768253,
+      "ecart_pct": -37.665132255730974,
+      "economie": 130213.4149768253
+    },
+    {
+      "type": "Maison",
+      "surface": 52.0,
+      "prix_reel": 120000.0,
+      "prix_predit": 249494.72535655156,
+      "ecart_pct": -51.902790799080556,
+      "economie": 129494.72535655156
+    },
+    {
+      "type": "Maison",
+      "surface": 100.0,
+      "prix_reel": 286940.0,
+      "prix_predit": 414441.0504198779,
+      "ecart_pct": -30.764580461009892,
+      "economie": 127501.05041987792
+    },
+    {
+      "type": "Maison",
+      "surface": 92.0,
+      "prix_reel": 260000.0,
+      "prix_predit": 386949.99624265684,
+      "ecart_pct": -32.807855659739126,
+      "economie": 126949.99624265684
+    },
+    {
+      "type": "Maison",
+      "surface": 42.0,
+      "prix_reel": 88285.71,
+      "prix_predit": 215130.90763502524,
+      "ecart_pct": -58.961866070040095,
+      "economie": 126845.19763502524
+    },
+    {
+      "type": "Maison",
+      "surface": 72.0,
+      "prix_reel": 193000.0,
+      "prix_predit": 318222.3607996042,
+      "ecart_pct": -39.35058507043794,
+      "economie": 125222.36079960421
+    }
+  ]
+}
