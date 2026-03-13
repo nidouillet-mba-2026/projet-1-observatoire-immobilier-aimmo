@@ -20,6 +20,7 @@ import logging
 import os
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
@@ -163,15 +164,27 @@ def scrape_all() -> list[dict]:
     logger.info("Démarrage du scraping BienIci (Toulon, ≤ 500 000 €)…")
 
     while True:
-        url  = _build_url(page_from)
-        data = _fetch_page(url)
-        ads  = data.get("realEstateAds", [])
+        url = _build_url(page_from)
 
-        # Premier appel : on lit le total disponible dans l'API
+        try:
+            data = _fetch_page(url)
+        except urllib.error.HTTPError as e:
+            if e.code == 400:
+                # BienIci limite l'offset à ~2 500 résultats : on s'arrête proprement
+                logger.info(
+                    f"  ⚠️  Limite de pagination BienIci atteinte à l'offset {page_from} "
+                    f"(HTTP 400) — {len(annonces)} annonces collectées au total."
+                )
+                break
+            raise  # autres codes HTTP (403, 500…) → on laisse remonter
+
+        ads = data.get("realEstateAds", [])
+
+        # Premier appel : on lit le total déclaré par l'API
         if total is None:
             total    = data.get("total", 0)
             nb_pages = (total // PAGE_SIZE) + (1 if total % PAGE_SIZE else 0)
-            logger.info(f"  → {total} annonces disponibles (~{nb_pages} pages)")
+            logger.info(f"  → {total} annonces déclarées (~{nb_pages} pages max)")
 
         if not ads:
             break
