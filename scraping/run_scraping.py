@@ -114,10 +114,21 @@ def _to_int(val) -> int | None:
     return int(f) if f is not None else None
 
 
+def _dpe(val: str | None) -> str | None:
+    """Retourne la lettre DPE/GES (A-G) ou None si invalide / non renseigné."""
+    return val if val and val in "ABCDEFG" else None
+
+
+def _pub_date(val: str | None) -> str | None:
+    """Filtre les dates epoch (1970) renvoyées par BienIci quand la date est inconnue."""
+    return None if not val or val.startswith("1970") else val
+
+
 def _parse_annonce(ad: dict) -> dict | None:
     """
     Transforme une annonce brute BienIci en ligne prête pour Supabase.
     Retourne None si l'annonce manque de prix ou de surface.
+    Capture l'ensemble des champs utiles exposés par l'API BienIci.
     """
     prix    = _to_float(ad.get("price"))
     surface = _to_float(ad.get("surfaceArea"))
@@ -128,30 +139,80 @@ def _parse_annonce(ad: dict) -> dict | None:
 
     ad_id = ad.get("id", "")
 
-    # Type de bien
+    # ── Type de bien ──────────────────────────────────────────────────────────
     raw_type  = ad.get("propertyType", "")
     type_bien = PROPERTY_TYPE_MAP.get(raw_type, raw_type.capitalize() if raw_type else "Autre")
 
-    # Source : nom agence si dispo, sinon particulier / BienIci
-    source   = "BienIci"
-    agencies = (ad.get("userRelativeData") or {}).get("agencies", [])
-    if agencies and agencies[0].get("name"):
-        source = agencies[0]["name"]
-    elif ad.get("accountDisplayName"):
-        source = ad["accountDisplayName"]
+    # ── Source (agence ou particulier) ────────────────────────────────────────
+    source = ad.get("accountDisplayName") or "BienIci"
 
-    # Localisation
-    quartier = ad.get("district") or ad.get("city") or "Toulon"
+    # ── Localisation — district est un dict, pas une string ──────────────────
+    district = ad.get("district")
+    quartier = (
+        district.get("name") if isinstance(district, dict) else None
+    ) or ad.get("city") or "Toulon"
 
+    # ── Coordonnées GPS (floutées par BienIci au niveau quartier) ─────────────
+    blur = ad.get("blurInfo") or {}
+    pos  = blur.get("position") or {}
+
+    # ── Retourne tous les champs disponibles ──────────────────────────────────
     return {
-        "lien":      f"https://www.bienici.com/annonce/{ad_id}",
-        "titre":     ad.get("title") or f"{type_bien} {surface} m² — {quartier}",
-        "prix":      prix,
-        "surface":   surface,
-        "pieces":    _to_int(ad.get("roomsQuantity")),
-        "quartier":  quartier,
-        "type_bien": type_bien,
-        "source":    source,
+        # ── Identité / base ───────────────────────────────────────────────────
+        "lien":               f"https://www.bienici.com/annonce/{ad_id}",
+        "titre":              ad.get("title") or f"{type_bien} {surface} m² — {quartier}",
+        "prix":               prix,
+        "surface":            surface,
+        "pieces":             _to_int(ad.get("roomsQuantity")),
+        "quartier":           quartier,
+        "type_bien":          type_bien,
+        "source":             source,
+        # ── Détails du bien ───────────────────────────────────────────────────
+        "chambres":           _to_int(ad.get("bedroomsQuantity")),
+        "sdb":                _to_int(ad.get("bathroomsQuantity")),
+        "sde":                _to_int(ad.get("showerRoomsQuantity")),
+        "wc":                 _to_int(ad.get("toiletQuantity")),
+        "etage":              _to_int(ad.get("floor")),
+        "nb_etages":          _to_int(ad.get("floorQuantity")),
+        "annee_construction": _to_int(ad.get("yearOfConstruction")),
+        "neuf":               ad.get("newProperty"),
+        "travaux":            ad.get("workToDo"),
+        # ── Énergie / DPE ─────────────────────────────────────────────────────
+        "dpe":                _dpe(ad.get("energyClassification")),
+        "ges":                _dpe(ad.get("greenhouseGazClassification")),
+        "energie_valeur":     _to_int(ad.get("energyValue")),
+        # ── Équipements (booléens) ────────────────────────────────────────────
+        "ascenseur":          ad.get("hasElevator"),
+        "balcon":             ad.get("hasBalcony"),
+        "terrasse":           ad.get("hasTerrace"),
+        "jardin":             ad.get("hasGarden"),
+        "piscine":            ad.get("hasPool"),
+        "cave":               ad.get("hasCellar"),
+        "parking":            (ad.get("parkingPlacesQuantity") or 0) > 0,
+        "nb_parking":         _to_int(ad.get("parkingPlacesQuantity")),
+        "cheminee":           ad.get("hasFirePlace"),
+        "climatisation":      ad.get("hasAirConditioning"),
+        "vue_degagee":        ad.get("hasUnobstructedView"),
+        "interphone":         ad.get("hasIntercom"),
+        "digicode":           ad.get("hasDoorCode"),
+        "gardien":            ad.get("hasCaretaker"),
+        "pmr":                ad.get("isDisabledPeopleFriendly"),
+        # ── Copropriété ───────────────────────────────────────────────────────
+        "copropriete":        ad.get("isInCondominium"),
+        "nb_lots_copro":      _to_int(ad.get("condominiumPartsQuantity")),
+        "charges_annuelles":  _to_int(ad.get("annualCondominiumFees")),
+        "copro_procedure":    ad.get("isCondominiumInProcedure"),
+        # ── Localisation ──────────────────────────────────────────────────────
+        "latitude":           _to_float(pos.get("lat")),
+        "longitude":          _to_float(pos.get("lng")),
+        "exposition":         ad.get("exposition") or None,
+        # ── Marché ────────────────────────────────────────────────────────────
+        "prix_baisse":        ad.get("priceHasDecreased"),
+        "prix_m2_bienici":    _to_float(ad.get("pricePerSquareMeter")),
+        "type_vendeur":       ad.get("accountType") or None,
+        "date_publication":   _pub_date(ad.get("publicationDate")),
+        # ── Texte ─────────────────────────────────────────────────────────────
+        "description":        ad.get("description") or None,
     }
 
 
