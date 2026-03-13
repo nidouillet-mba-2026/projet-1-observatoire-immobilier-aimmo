@@ -23,7 +23,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime
 
 from supabase import create_client
 
@@ -108,7 +108,7 @@ def _to_float(val) -> float | None:
         return None
 
 
-def _parse_annonce(ad: dict, scraped_at: str) -> dict | None:
+def _parse_annonce(ad: dict) -> dict | None:
     """
     Transforme une annonce brute BienIci en ligne prête pour Supabase.
     Retourne None si l'annonce manque de prix ou de surface.
@@ -138,16 +138,14 @@ def _parse_annonce(ad: dict, scraped_at: str) -> dict | None:
     quartier = ad.get("district") or ad.get("city") or "Toulon"
 
     return {
-        "lien":         f"https://www.bienici.com/annonce/{ad_id}",
-        "titre":        ad.get("title") or f"{type_bien} {surface} m² — {quartier}",
-        "prix":         prix,
-        "surface":      surface,
-        "pieces":       ad.get("roomsQuantity"),
-        "quartier":     quartier,
-        "type_bien":    type_bien,
-        "source":       source,
-        "description":  ad.get("description") or "",
-        "date_scraped": scraped_at,
+        "lien":      f"https://www.bienici.com/annonce/{ad_id}",
+        "titre":     ad.get("title") or f"{type_bien} {surface} m² — {quartier}",
+        "prix":      prix,
+        "surface":   surface,
+        "pieces":    ad.get("roomsQuantity"),
+        "quartier":  quartier,
+        "type_bien": type_bien,
+        "source":    source,
     }
 
 
@@ -161,7 +159,6 @@ def scrape_all() -> list[dict]:
     annonces:  list[dict] = []
     page_from: int        = 0
     total:     int | None = None
-    scraped_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     logger.info("Démarrage du scraping BienIci (Toulon, ≤ 500 000 €)…")
 
@@ -197,7 +194,7 @@ def scrape_all() -> list[dict]:
             break
 
         for ad in ads:
-            parsed = _parse_annonce(ad, scraped_at)
+            parsed = _parse_annonce(ad)
             if parsed:
                 annonces.append(parsed)
 
